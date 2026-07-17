@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leimovsky · Kfildi</title>
+  <!-- Шрифты и иконки -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,700;14..32,900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0d15;
+      color: #f0f4ff;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.5s ease;
+    }
+
+    /* ВИДЕО НА ФОНЕ */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .video-background video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.85;
+      filter: brightness(1.0) saturate(1.3) contrast(1.1);
+      transform: scale(1.02);
+    }
+
+    /* тёмная накладка — будет менять цвет в зависимости от темы */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      transition: background 0.6s ease;
+      background: radial-gradient(circle at 30% 40%, rgba(10, 14, 30, 0.35) 0%, #0b0d15 75%);
+    }
+
+    /* основной контент */
+    .content {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 2rem 1.5rem;
+      padding: 2.5rem 2.8rem;
+      backdrop-filter: blur(6px) brightness(1.0);
+      background: rgba(12, 16, 28, 0.45);
+      border-radius: 56px 24px 56px 24px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: all 0.3s ease;
+      animation: floatIn 1.4s cubic-bezier(0.19, 1, 0.22, 1);
+      width: 100%;
+    }
+
+    @keyframes floatIn {
+      0% { opacity: 0; transform: translateY(40px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .animate-on-load {
+      opacity: 0;
+      animation: fadeSlideUp 0.9s ease forwards;
+    }
+
+    .delay-1 { animation-delay: 0.15s; }
+    .delay-2 { animation-delay: 0.35s; }
+    .delay-3 { animation-delay: 0.55s; }
+    .delay-4 { animation-delay: 0.75s; }
+    .delay-5 { animation-delay: 0.95s; }
+
+    @keyframes fadeSlideUp {
+      0% { opacity: 0; transform: translateY(24px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* шапка */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 1.2rem;
+      gap: 12px;
+    }
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.4rem 1.2rem 0.4rem 0.8rem;
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(4px);
+    }
+
+    .badge i {
+      font-size: 1.4rem;
+      color: #a0b8ff;
+      filter: drop-shadow(0 0 6px #4f7aff55);
+      transition: color 0.4s ease;
+    }
+
+    .badge span {
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      font-size: 1rem;
+      background: linear-gradient(135deg, #d6e2ff, #a8c0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all 0.4s ease;
+    }
+
+    /* ПРАВАЯ ЧАСТЬ: переключатель тем + соцсети */
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .theme-switcher {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 4px 10px 4px 8px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(4px);
+    }
+
+    .theme-label {
+      font-size: 0.75rem;
+      opacity: 0.5;
+      color: #b0c4ff;
+      margin-right: 2px;
+    }
+
+    .theme-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: transparent;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
+    }
+
+    .theme-btn:hover {
+      transform: scale(1.15);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+    }
+
+    .theme-btn.active {
+      border-color: #ffffff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    .theme-btn[data-theme="default"] { background: #4f7aff; }
+    .theme-btn[data-theme="red"]    { background: #e74c3c; }
+    .theme-btn[data-theme="yellow"] { background: #f1c40f; }
+    .theme-btn[data-theme="green"]  { background: #2ecc71; }
+
+    .socials {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .social-link {
+      color: #bcc9ff;
+      background: rgba(255, 255, 255, 0.03);
+      width: 44px;
+      height: 44px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      transition: all 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(4px);
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .social-link:hover {
+      background: #2f3f8a;
+      color: white;
+      transform: scale(1.1) translateY(-3px);
+      border-color: #6d8aff;
+      box-shadow: 0 12px 28px rgba(70, 130, 255, 0.3);
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .name-title {
+      font-size: clamp(2.8rem, 12vw, 5.4rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      background: linear-gradient(145deg, #ffffff 20%, #b0cbff 70%, #8aaaff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 40px rgba(68, 128, 255, 0.2);
+      margin-bottom: 0.2rem;
+      transition: all 0.4s ease;
+    }
+
+    .alias i {
+      color: #6d8aff;
+      font-size: 1.2rem;
+      opacity: 0.8;
+      transition: color 0.4s ease;
+    }
+
+    .role-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      margin: 1.2rem 0 0.6rem;
+    }
+
+    .role-tag {
+      background: rgba(60, 100, 255, 0.08);
+      backdrop-filter: blur(6px);
+      padding: 0.5rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      color: #d2e0ff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: 0.2s ease;
+    }
+
+    .role-tag i {
+      margin-right: 8px;
+      color: #7f9fff;
+      transition: color 0.4s ease;
+    }
+
+    .role-tag:hover {
+      background: rgba(70, 120, 255, 0.15);
+      transform: translateY(-2px);
+      border-color: #4f7aff55;
+    }
+
+    .description {
+      max-width: 720px;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #d0defa;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 1.2rem 1.8rem;
+      border-radius: 28px;
+      backdrop-filter: blur(4px);
+      border-left: 3px solid #4f7aff;
+      margin: 0.6rem 0 0.8rem;
+      font-weight: 300;
+      transition: border-color 0.4s ease, color 0.4s ease;
+    }
+
+    .description strong {
+      color: white;
+      font-weight: 600;
+      background: linear-gradient(135deg, #b6ccff, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all 0.4s ease;
+    }
+
+    .telegram-wrapper {
+      margin-top: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(145deg, #1f2b5a, #141b3a);
+      padding: 0.9rem 2.4rem 0.9rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: white;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 28px rgba(0, 20, 80, 0.6);
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+      backdrop-filter: blur(8px);
+      letter-spacing: 0.5px;
+    }
+
+    .tg-btn i {
+      font-size: 1.9rem;
+      color: #4f9aff;
+      filter: drop-shadow(0 0 12px #3f7aff77);
+      transition: 0.2s;
+    }
+
+    .tg-btn:hover {
+      transform: scale(1.03) translateY(-4px);
+      background: linear-gradient(145deg, #2b3b7a, #1a254f);
+      border-color: #6f96ff;
+      box-shadow: 0 18px 40px rgba(40, 80, 255, 0.4);
+    }
+
+    .tg-btn:hover i {
+      color: #7aa4ff;
+      transform: rotate(-4deg) scale(1.1);
+    }
+
+    .tg-label {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      letter-spacing: 0.8px;
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      padding-left: 16px;
+      color: #aab9f0;
+      transition: color 0.4s ease, border-color 0.4s ease;
+    }
+
+    /* адаптив */
+    @media (max-width: 700px) {
+      .content {
+        padding: 1.8rem 1.2rem;
+        border-radius: 32px 16px 32px 16px;
+        margin: 0.8rem;
+      }
+      .header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .header-right {
+        justify-content: flex-end;
+        width: 100%;
+      }
+      .description {
+        font-size: 1rem;
+        padding: 1rem 1.2rem;
+      }
+      .tg-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.9rem 1.2rem;
+      }
+      .telegram-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .tg-label {
+        border-left: none;
+        padding-left: 0;
+        text-align: center;
+      }
+      .theme-switcher {
+        padding: 4px 8px;
+      }
+      .theme-btn {
+        width: 26px;
+        height: 26px;
+      }
+      .social-link {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .role-tags {
+        gap: 8px;
+      }
+      .role-tag {
+        font-size: 0.8rem;
+        padding: 0.3rem 1rem;
+      }
+      .name-title {
+        font-size: 2.6rem;
+      }
+      .header-right {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+    }
+
+    .pulse-icon {
+      animation: pulseGlow 3s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% { filter: drop-shadow(0 0 2px #3f7aff44); }
+      100% { filter: drop-shadow(0 0 16px #6d8affaa); }
+    }
+
+    /* ===== ТЕМЫ — ИСПРАВЛЕНЫ ===== */
+    /* Красная */
+    body.theme-red .overlay {
+      background: radial-gradient(circle at 30% 40%, rgba(60, 10, 10, 0.50) 0%, #1a0505 85%) !important;
+    }
+    body.theme-red .name-title {
+      background: linear-gradient(145deg, #ffb3b3, #ff6b6b, #e74c3c) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+    body.theme-red .badge i { color: #ff6b6b !important; }
+    body.theme-red .badge span { background: linear-gradient(135deg, #ffb3b3, #ff6b6b) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    body.theme-red .alias { color: #ffb3b3 !important; }
+    body.theme-red .alias i { color: #e74c3c !important; }
+    body.theme-red .role-tag { background: rgba(200, 60, 60, 0.15) !important; border-color: rgba(255, 100, 100, 0.15) !important; color: #ffcccc !important; }
+    body.theme-red .role-tag i { color: #ff6b6b !important; }
+    body.theme-red .description { border-color: #e74c3c !important; }
+    body.theme-red .description strong { background: linear-gradient(135deg, #ffb3b3, #ff6b6b) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    body.theme-red .tg-btn { background: linear-gradient(145deg, #5a1f1f, #3a1414) !important; border-color: rgba(255, 100, 100, 0.2) !important; }
+    body.theme-red .tg-btn i { color: #ff6b6b !important; filter: drop-shadow(0 0 12px #e74c3c77) !important; }
+    body.theme-red .social-link:hover { background: #5a2a2a !important; border-color: #e74c3c !important; }
+    body.theme-red .tg-label { color: #ffb3b3 !important; border-color: rgba(255, 100, 100, 0.15) !important; }
+    body.theme-red .theme-btn[data-theme="red"] { border-color: #ffffff !important; box-shadow: 0 0 20px rgba(255, 255, 255, 0.3) !important; }
+
+    /* Жёлтая */
+    body.theme-yellow .overlay {
+      background: radial-gradient(circle at 30% 40%, rgba(60, 50, 10, 0.50) 0%, #1a1505 85%) !important;
+    }
+    body.theme-yellow .name-title {
+      background: linear-gradient(145deg, #fff5b3, #f1c40f, #d4a800) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+    body.theme-yellow .badge i { color: #f1c40f !important; }
+    body.theme-yellow .badge span { background: linear-gradient(135deg, #fff5b3, #f1c40f) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    body.theme-yellow .alias { color: #fff5b3 !important; }
+    body.theme-yellow .alias i { color: #f1c40f !important; }
+    body.theme-yellow .role-tag { background: rgba(200, 180, 60, 0.15) !important; border-color: rgba(255, 215, 0, 0.15) !important; color: #fff5b3 !important; }
+    body.theme-yellow .role-tag i { color: #f1c40f !important; }
+    body.theme-yellow .description { border-color: #f1c40f !important; }
+    body.theme-yellow .description strong { background: linear-gradient(135deg, #fff5b3, #f1c40f) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    body.theme-yellow .tg-btn { background: linear-gradient(145deg, #5a4a1f, #3a3014) !important; border-color: rgba(255, 215, 0, 0.2) !important; }
+    body.theme-yellow .tg-btn i { color: #f1c40f !important; filter: drop-shadow(0 0 12px #f1c40f77) !important; }
+    body.theme-yellow .social-link:hover { background: #5a4a2a !important; border-color: #f1c40f !important; }
+    body.theme-yellow .tg-label { color: #fff5b3 !important; border-color: rgba(255, 215, 0, 0.15) !important; }
+    body.theme-yellow .theme-btn[data-theme="yellow"] { border-color: #ffffff !important; box-shadow: 0 0 20px rgba(255, 255, 255, 0.3) !important; }
+
+    /* Зелёная */
+    body.theme-green .overlay {
+      background: radial-gradient(circle at 30% 40%, rgba(10, 60, 30, 0.50) 0%, #051a0a 85%) !important;
+    }
+    body.theme-green .name-title {
+      background: linear-gradient(145deg, #b3ffd4, #2ecc71, #1a9c54) !important;
+      -webkit-background-clip: text !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+    body.theme-green .badge i { color: #2ecc71 !important; }
+    body.theme-green .badge span { background: linear-gradient(135deg, #b3ffd4, #2ecc71) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    body.theme-green .alias { color: #b3ffd4 !important; }
+    body.theme-green .alias i { color: #2ecc71 !important; }
+    body.theme-green .role-tag { background: rgba(60, 200, 120, 0.15) !important; border-color: rgba(46, 204, 113, 0.15) !important; color: #b3ffd4 !important; }
+    body.theme-green .role-tag i { color: #2ecc71 !important; }
+    body.theme-green .description { border-color: #2ecc71 !important; }
+    body.theme-green .description strong { background: linear-gradient(135deg, #b3ffd4, #2ecc71) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; }
+    body.theme-green .tg-btn { background: linear-gradient(145deg, #1f4a2a, #14301a) !important; border-color: rgba(46, 204, 113, 0.2) !important; }
+    body.theme-green .tg-btn i { color: #2ecc71 !important; filter: drop-shadow(0 0 12px #2ecc7177) !important; }
+    body.theme-green .social-link:hover { background: #2a4a3a !important; border-color: #2ecc71 !important; }
+    body.theme-green .tg-label { color: #b3ffd4 !important; border-color: rgba(46, 204, 113, 0.15) !important; }
+    body.theme-green .theme-btn[data-theme="green"] { border-color: #ffffff !important; box-shadow: 0 0 20px rgba(255, 255, 255, 0.3) !important; }
+
+    /* базовая тема — активная кнопка default */
+    body:not(.theme-red):not(.theme-yellow):not(.theme-green) .theme-btn[data-theme="default"] {
+      border-color: #ffffff !important;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.3) !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- ВИДЕО НА ЗАДНЕМ ФОНЕ -->
+  <div class="video-background">
+    <video autoplay muted loop playsinline>
+      <source src="2_5391334780082100891.mp4" type="video/mp4" />
+    </video>
+  </div>
+  <div class="overlay"></div>
+
+  <!-- ОСНОВНОЙ КОНТЕНТ -->
+  <div class="content">
+    <!-- шапка с бейджем слева и переключателем + соцсетями справа -->
+    <div class="header animate-on-load delay-1">
+      <div class="badge">
+        <i class="fas fa-code pulse-icon"></i>
+        <span>Leimovsky / Kfildi</span>
+      </div>
+      <div class="header-right">
+        <div class="theme-switcher">
+          <span class="theme-label"><i class="fas fa-palette"></i></span>
+          <button class="theme-btn active" data-theme="default" title="Синяя (по умолчанию)"></button>
+          <button class="theme-btn" data-theme="red" title="Красная"></button>
+          <button class="theme-btn" data-theme="yellow" title="Жёлтая"></button>
+          <button class="theme-btn" data-theme="green" title="Зелёная"></button>
+        </div>
+        <div class="socials">
+          <a href="#" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+            <i class="fab fa-telegram-plane"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- герой-блок -->
+    <div class="hero">
+      <h1 class="name-title animate-on-load delay-2">
+        LEIMOVSKY
+      </h1>
+      <div class="alias animate-on-load delay-2">
+        <i class="fas fa-sync-alt fa-fw"></i> 
+        <span>также известен как <strong style="font-weight:700; color:#b6ccff;">KFILDI</strong></span>
+      </div>
+
+      <div class="role-tags animate-on-load delay-3">
+        <span class="role-tag"><i class="fas fa-video"></i> Editor</span>
+        <span class="role-tag"><i class="fas fa-laptop-code"></i> Programmer</span>
+        <span class="role-tag"><i class="fas fa-pen-fancy"></i> Designer</span>
+        <span class="role-tag"><i class="fas fa-cube"></i> Multipotential</span>
+      </div>
+
+      <div class="description animate-on-load delay-4">
+        <i class="fas fa-quote-left" style="opacity:0.3; margin-right:6px;"></i>
+        Я <strong>Leimovsky</strong> (он же <strong>Kfildi</strong>) — 
+        <strong>эдитор</strong>, <strong>программист</strong> и <strong>дизайнер</strong>. 
+        Пишу код и проектирую интерфейсы. 
+        В каждом проекте ищу баланс между эстетикой и функциональностью.
+        <i class="fas fa-quote-right" style="opacity:0.3; margin-left:6px;"></i>
+      </div>
+
+      <div class="telegram-wrapper animate-on-load delay-5">
+        <a href="#" class="tg-btn" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-telegram-plane"></i> 
+          <span>Написать в Telegram</span>
+        </a>
+        <span class="tg-label">
+          <i class="fas fa-paper-plane" style="margin-right:6px; opacity:0.5;"></i> 
+          единственная соцсеть
+        </span>
+      </div>
+
+      <div style="margin-top: 2.2rem; font-size: 0.8rem; opacity:0.3; display:flex; gap: 18px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 1.2rem;">
+        <span><i class="far fa-calendar-alt"></i> 2026 · Leimovsky</span>
+        <span><i class="far fa-heart" style="color: #6d8aff;"></i> kfildi</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // Telegram ссылка
+      const tgLinks = document.querySelectorAll('.tg-btn, .social-link');
+      tgLinks.forEach(link => {
+        if (link.href && link.href.includes('#')) {
+          link.href = 'https://t.me/xd_leim2';
+        }
+      });
+
+      // Переключение тем — ИСПРАВЛЕНО
+      const themeButtons = document.querySelectorAll('.theme-btn');
+      const body = document.body;
+
+      // Удаляем все классы тем
+      function removeAllThemes() {
+        body.classList.remove('theme-red', 'theme-yellow', 'theme-green');
+      }
+
+      // Устанавливаем активную кнопку
+      function setActiveButton(activeBtn) {
+        themeButtons.forEach(btn => btn.classList.remove('active'));
+        if (activeBtn) activeBtn.classList.add('active');
+      }
+
+      themeButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const theme = this.dataset.theme;
+          
+          // Сбрасываем все темы
+          removeAllThemes();
+          
+          if (theme === 'default') {
+            // базовая тема — просто убираем все классы
+            setActiveButton(this);
+          } else {
+            body.classList.add('theme-' + theme);
+            setActiveButton(this);
+          }
+        });
+      });
+
+      // Устанавливаем начальную активную кнопку (default)
+      const defaultBtn = document.querySelector('.theme-btn[data-theme="default"]');
+      if (defaultBtn) setActiveButton(defaultBtn);
+
+      console.log('🌟 Leimovsky / Kfildi — темы исправлены и работают!');
+    })();
+  </script>
+</body>
+</html>
