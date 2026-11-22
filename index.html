@@ -1,30 +1,303 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Привет!</title>
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        h1 {
-            font-size: 96px;
-            color: #333;
-            margin: 0;
-            text-align: center;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080910">
+<title>PROTOCOL // Бог кода</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap');
+
+/* ===== Исходная футуристичная тема ===== */
+:root{
+  --bg:#080910; --panel:#10121d; --text:#f3f5ff; --muted:#9297ad;
+  --cyan:#67f5e3; --violet:#9b7cff; --line:rgba(255,255,255,.1);
+  --card-bg:linear-gradient(145deg,#141725d9,#0d0f18);
+  --nav-border:rgba(255,255,255,.1); --term-bg:#090c13; --term-text:#aab3c8;
+  --btn-primary-bg:var(--cyan); --btn-primary-color:#071011;
+  --hero-gradient:linear-gradient(100deg,var(--cyan),#a6a0ff 60%,#d8a5ff);
+  --shadow-glow:0 0 35px #67f5e32c;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;overflow-x:hidden;transition:background .35s,color .35s}
+body:not(.normal-mode):before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at 15% 10%,rgba(74,65,160,.18),transparent 40%),radial-gradient(ellipse at 85% 35%,rgba(36,170,160,.1),transparent 35%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:auto,auto,48px 48px,48px 48px}
+#stars{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.65;transition:opacity .35s}
+body.normal-mode #stars{opacity:0}
+a{color:inherit;text-decoration:none}.wrap{width:min(1160px,calc(100% - 44px));margin:auto}
+.nav{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--nav-border);transition:border-color .35s}
+.logo{font:700 17px 'Space Mono';letter-spacing:.13em}.logo span{color:var(--cyan)}
+.navlinks{display:flex;gap:30px;color:var(--muted);font-size:13px}.navlinks a:hover{color:var(--cyan)}
+.status{font:11px 'Space Mono';color:var(--cyan);border:1px solid #67f5e344;padding:9px 12px;border-radius:99px;transition:all .35s}
+body.normal-mode .status{border-color:var(--line);color:var(--muted);background:var(--panel)}
+.dot{display:inline-block;width:7px;height:7px;background:var(--cyan);border-radius:50%;margin-right:7px;box-shadow:0 0 12px var(--cyan)}
+body.normal-mode .dot{box-shadow:none}
+.theme-toggle{font:11px 'Space Mono';padding:9px 14px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;transition:.25s;white-space:nowrap}
+.theme-toggle:hover{border-color:var(--cyan);color:var(--cyan)}
+body.normal-mode .theme-toggle:hover{background:#2a2f3a;color:var(--text)}
+.hero{min-height:690px;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:50px;padding:76px 0 90px}
+.eyebrow{font:12px 'Space Mono';letter-spacing:.2em;color:var(--cyan);text-transform:uppercase}
+.hero h1{font-size:clamp(56px,8.3vw,108px);line-height:.91;letter-spacing:-.085em;margin:23px 0 25px;font-weight:900}
+.hero h1 .gradient{background:var(--hero-gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+body.normal-mode .hero h1 .gradient{color:var(--text);background:none;-webkit-background-clip:unset;background-clip:unset}
+.hero p{max-width:540px;color:var(--muted);font-size:16px;line-height:1.8}
+.actions{display:flex;gap:13px;flex-wrap:wrap;margin-top:34px}
+.btn{padding:15px 21px;border-radius:9px;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:10px;transition:.25s;border:1px solid var(--line);cursor:pointer}
+.btn.primary{background:var(--btn-primary-bg);color:var(--btn-primary-color);border-color:var(--btn-primary-bg);box-shadow:var(--shadow-glow)}
+.btn.primary:hover{transform:translateY(-4px);box-shadow:0 10px 35px #67f5e322}
+body.normal-mode .btn.primary:hover{box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.btn.secondary:hover{border-color:var(--cyan);color:var(--cyan)}
+.visual{height:430px;position:relative;display:grid;place-items:center}
+.orb{width:290px;height:290px;border-radius:50%;position:relative;background:radial-gradient(circle at 35% 30%,#a5fff3 0,#5b8baf 8%,#29265a 34%,#111321 68%);box-shadow:inset -25px -25px 60px #05060c,0 0 90px #786aff30;animation:float 6s ease-in-out infinite;transition:all .35s}
+body.normal-mode .orb{width:220px;height:220px;background:#20242d;box-shadow:inset 0 0 0 1px var(--line);animation:none}
+.orb:before,.orb:after{content:"";position:absolute;inset:-28px;border:1px solid #67f5e355;border-radius:50%;transform:rotateX(68deg) rotateZ(-25deg)}
+.orb:after{inset:-55px;border-color:#9b7cff55;transform:rotateX(68deg) rotateZ(48deg)}
+body.normal-mode .orb:before,body.normal-mode .orb:after{display:none}
+.core{position:absolute;inset:0;display:grid;place-items:center;font:700 60px 'Space Mono';color:#eaffff;text-shadow:0 0 35px var(--cyan);z-index:2}
+body.normal-mode .core{color:var(--muted);text-shadow:none}
+.orbit{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--cyan);box-shadow:0 0 22px var(--cyan);top:35px;right:70px;animation:float 4s infinite}
+body.normal-mode .orbit{display:none}
+.float-card{position:absolute;background:#111522d9;border:1px solid var(--line);backdrop-filter:blur(12px);padding:13px 16px;border-radius:10px;font:11px 'Space Mono';color:var(--muted);box-shadow:0 15px 50px #0005;transition:all .35s}
+body.normal-mode .float-card{background:var(--panel);backdrop-filter:none;box-shadow:0 2px 8px rgba(0,0,0,.2);border-color:var(--line)}
+.float-card b{color:var(--cyan);display:block;margin-bottom:5px}
+.fc1{left:0;top:65px}.fc2{right:-8px;bottom:60px}.fc3{left:20px;bottom:15px}
+.section{padding:92px 0;border-top:1px solid var(--line)}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:38px}
+.section h2{font-size:clamp(34px,5vw,56px);letter-spacing:-.06em;margin:12px 0 0}
+.section-head p{color:var(--muted);max-width:350px;line-height:1.7;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.card{background:var(--card-bg);border:1px solid var(--line);border-radius:15px;padding:25px;min-height:205px;transition:.3s;position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;width:150px;height:150px;background:var(--glow,#67f5e3);filter:blur(90px);opacity:.13;right:-50px;top:-60px;transition:opacity .35s}
+body.normal-mode .card:before{opacity:0}
+.card:hover{transform:translateY(-7px);border-color:#67f5e366}
+body.normal-mode .card:hover{transform:none;border-color:var(--line);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.card .num{font:11px 'Space Mono';color:var(--cyan)}
+.card h3{font-size:21px;margin:24px 0 9px}
+.card p{font-size:13px;color:var(--muted);line-height:1.7;margin:0}
+.tag{display:inline-block;font:10px 'Space Mono';padding:7px 9px;border:1px solid var(--line);border-radius:6px;color:#bfc4d9;margin:5px 4px 0 0}
+body.normal-mode .tag{color:var(--muted)}
+.terminal{border:1px solid #67f5e344;border-radius:14px;background:var(--term-bg);overflow:hidden;box-shadow:0 25px 90px #0006;transition:all .35s}
+body.normal-mode .terminal{border-color:var(--line);box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.termbar{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;gap:7px;align-items:center;color:var(--muted);font:11px 'Space Mono'}
+.traffic{width:8px;height:8px;border-radius:50%;background:#ff6e82}.traffic:nth-child(2){background:#ffce6e}.traffic:nth-child(3){background:#67f5a6}
+body.normal-mode .traffic,body.normal-mode .traffic:nth-child(2),body.normal-mode .traffic:nth-child(3){background:#3a3f4a}
+.termtext{padding:27px;font:13px/2 'Space Mono';color:var(--term-text);min-height:220px}
+.prompt{color:var(--cyan)}body.normal-mode .prompt{color:var(--muted)}
+.purple{color:#b69bff}body.normal-mode .purple{color:var(--muted)}
+.cursor{display:inline-block;width:8px;height:15px;background:var(--cyan);vertical-align:middle;animation:blink 1s steps(2) infinite}
+body.normal-mode .cursor{background:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:20px}
+.stat{padding:22px;border:1px solid var(--line);border-radius:12px}
+.stat strong{display:block;font-size:32px;letter-spacing:-.06em}
+.stat span{font:10px 'Space Mono';color:var(--muted);letter-spacing:.1em}
+.manifesto{font-size:clamp(26px,4vw,44px);line-height:1.25;letter-spacing:-.05em;max-width:900px}
+.manifesto span{color:var(--cyan)}
+.contact{display:flex;align-items:center;justify-content:space-between;gap:25px;padding:40px;border:1px solid #67f5e344;border-radius:18px;background:linear-gradient(110deg,#142027,#111321 60%,#211a35);transition:all .35s}
+body.normal-mode .contact{background:var(--panel);border-color:var(--line);box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.contact h2{font-size:clamp(30px,5vw,53px);margin:0 0 10px;letter-spacing:-.06em}
+.contact p{color:var(--muted);margin:0;font-size:14px}
+.footer{padding:35px 0;color:#71778c;font:10px 'Space Mono';display:flex;justify-content:space-between;gap:15px}
+body.normal-mode .footer{color:var(--muted)}
+.reveal{opacity:0;transform:translateY(25px);transition:opacity .8s,transform .8s}.reveal.show{opacity:1;transform:none}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}@keyframes blink{to{opacity:0}}
+
+/* ===== Стиль nedohackers.site (Обычный режим) ===== */
+body.normal-mode{
+  --bg:#0b0d10; --panel:#13161b; --text:#f0f2f5; --muted:#8b9199;
+  --cyan:#5b8def; --violet:#5b8def; --line:#252a32;
+  --card-bg:#13161b; --nav-border:#1e222a; --term-bg:#0f1216; --term-text:#b0b6bf;
+  --btn-primary-bg:#5b8def; --btn-primary-color:#ffffff;
+  --hero-gradient:none; --shadow-glow:none;
+}
+body.normal-mode:before{display:none}
+body.normal-mode .nav{height:72px}
+body.normal-mode .logo{font:600 15px 'Space Mono';letter-spacing:.08em}
+body.normal-mode .logo span{color:var(--muted)}
+body.normal-mode .navlinks{display:none} /* Скрываем навигацию */
+body.normal-mode .status{display:none}
+body.normal-mode .hero{min-height:auto;grid-template-columns:1fr;padding:90px 0 70px;gap:20px;text-align:left}
+body.normal-mode .visual{display:none}
+body.normal-mode .hero h1{font-size:clamp(48px,7vw,88px);line-height:1.02;letter-spacing:-.04em;margin:0 0 22px;font-weight:800}
+body.normal-mode .hero p{max-width:620px;font-size:16px;line-height:1.7;color:var(--muted)}
+body.normal-mode .actions{display:none} /* Скрываем кнопки */
+body.normal-mode .btn{border-radius:6px;padding:13px 20px;font-size:13px;font-weight:600;transition:.2s}
+body.normal-mode .btn.primary{background:var(--btn-primary-bg);color:#fff;border-color:var(--btn-primary-bg)}
+body.normal-mode .btn.primary:hover{transform:none;background:#4a7be0;box-shadow:none}
+body.normal-mode .btn.secondary{background:transparent;border-color:var(--line);color:var(--text)}
+body.normal-mode .btn.secondary:hover{border-color:var(--muted);color:var(--text)}
+body.normal-mode .section{padding:70px 0;border-top:1px solid var(--line)}
+body.normal-mode .section-head{display:block;margin-bottom:32px}
+body.normal-mode .section h2{font-size:clamp(28px,4vw,40px);letter-spacing:-.03em;margin:0 0 10px;font-weight:800}
+body.normal-mode .section-head p{max-width:560px;font-size:14px;line-height:1.7;color:var(--muted)}
+body.normal-mode .grid{gap:16px}
+body.normal-mode .card{background:var(--card-bg);border:1px solid var(--line);border-radius:10px;padding:24px;min-height:auto}
+body.normal-mode .card:before{display:none}
+body.normal-mode .card:hover{transform:none;border-color:#353b45;box-shadow:none}
+body.normal-mode .card .num{font:10px 'Space Mono';color:var(--muted);letter-spacing:.05em}
+body.normal-mode .card h3{font-size:19px;margin:16px 0 8px;font-weight:700}
+body.normal-mode .card p{font-size:13px;line-height:1.65;color:var(--muted)}
+body.normal-mode .tag{font:10px 'Space Mono';padding:5px 8px;border-radius:4px;color:var(--muted);border-color:var(--line)}
+body.normal-mode .manifesto{font-size:clamp(22px,3.2vw,32px);line-height:1.4;letter-spacing:-.02em;max-width:none}
+body.normal-mode .manifesto span{color:var(--text);font-weight:700}
+body.normal-mode .contact{flex-direction:column;align-items:flex-start;gap:20px;padding:32px;border-radius:10px;border-color:var(--line)}
+body.normal-mode .contact h2{font-size:clamp(26px,4vw,36px);letter-spacing:-.03em;margin-bottom:8px;font-weight:800}
+body.normal-mode .contact p{font-size:14px}
+body.normal-mode .contact .btn{width:100%;justify-content:center}
+body.normal-mode .footer{display:none}
+body.normal-mode .eyebrow{display:none} /* Скрываем плашки 01/02 и т.д. */
+body.normal-mode #terminal{display:none} /* Скрываем терминал */
+
+/* === Фон с картинкой для обычного режима === */
+body.normal-mode {
+  background-color: var(--bg);
+  background-image: 
+    linear-gradient(rgba(11, 13, 16, 0.85), rgba(11, 13, 16, 0.95)),
+    url('https://github.com/kfildi/leimovsky/blob/main/hsysjewds.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+body.normal-mode .wrap, body.normal-mode .section {
+  position: relative;
+  z-index: 1;
+}
+
+@media(max-width:800px){
+  .hero{grid-template-columns:1fr;padding:70px 0 45px;gap:10px}
+  .visual{height:350px}.orb{width:220px;height:220px}
+  .navlinks{display:none}.grid{grid-template-columns:1fr 1fr}
+  .section-head{display:block}.contact{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:520px){
+  .wrap{width:calc(100% - 30px)}.status{font-size:9px}.hero h1{font-size:62px}
+  .grid,.stats{grid-template-columns:1fr}.visual{height:310px}
+  .fc1{left:0}.fc2{right:0}.section{padding:65px 0}
+  .termtext{font-size:11px;padding:18px}.contact{padding:27px}.footer{flex-direction:column}
+  .nav{gap:8px}.theme-toggle{font-size:9px;padding:7px 10px}
+}
+</style>
 </head>
 <body>
-    <h1>Иди в пизду</h1>
+<canvas id="stars"></canvas>
+
+<header class="wrap nav">
+  <a class="logo" href="#">PROTOCOL<span>_</span></a>
+  <nav class="navlinks">
+    <a href="#about">Обо мне</a>
+    <a href="#stack">Стек</a>
+    <a href="#terminal">Мой мир</a>
+    <a href="#contact">Контакт</a>
+  </nav>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <button class="theme-toggle" id="themeToggle" type="button">Обычный дизайн</button>
+    <div class="status"><i class="dot"></i> SYSTEM ONLINE</div>
+  </div>
+</header>
+
+<main>
+<section class="wrap hero">
+  <div>
+    <div class="eyebrow">[ Архитектор цифровой реальности ]</div>
+    <h1>Я —<br><span class="gradient">PROTOCOL</span></h1>
+    <p>Не просто пишу код. Я создаю системы, превращаю идеи в технологии и заставляю невозможное работать. C++ • Python • бесконечный потенциал.</p>
+    <div class="actions">
+      <a class="btn primary" href="#stack">Исследовать мой код <span>↗</span></a>
+      <a class="btn secondary" href="#about">Узнать легенду ↓</a>
+    </div>
+  </div>
+  <div class="visual">
+    <div class="orb"></div><div class="core">&lt;/&gt;</div><div class="orbit"></div>
+    <div class="float-card fc1"><b>IDENTITY</b>PROTOCOL.exe</div>
+    <div class="float-card fc2"><b>STATUS: GODMODE</b>all systems nominal</div>
+    <div class="float-card fc3"><b>BUILDING</b>the future_</div>
+  </div>
+</section>
+
+<section class="section" id="about"><div class="wrap reveal">
+  <div class="section-head">
+    <div><div class="eyebrow">01 / WHO AM I</div><h2>Создан для большего.</h2></div>
+    <p>Мой главный инструмент — интеллект. Мой язык — код. Моя цель — выходить за пределы возможного.</p>
+  </div>
+  <p class="manifesto">Пока другие видят строки кода, я вижу <span>архитектуру будущего.</span> Пока другие ищут ответы — я создаю решения. Добро пожаловать в мой цифровой мир.</p>
+</div></section>
+
+<section class="section" id="stack"><div class="wrap reveal">
+  <div class="section-head">
+    <div><div class="eyebrow">02 / ARSENAL</div><h2>Мой арсенал.</h2></div>
+    <p>Каждый язык — отдельная суперсила. Каждый проект — новый уровень.</p>
+  </div>
+  <div class="grid">
+    <article class="card" style="--glow:#75a7ff">
+      <div class="num">01 — CORE ENGINE</div><h3>C++</h3>
+      <p>Производительность, контроль, низкоуровневая мощь. Там, где важна каждая миллисекунда.</p>
+      <div class="tag">PERFORMANCE</div><div class="tag">SYSTEMS</div>
+    </article>
+    <article class="card" style="--glow:#ffe078">
+      <div class="num">02 — AUTOMATION</div><h3>Python</h3>
+      <p>Автоматизация, логика и быстрые прототипы. От идеи до работающего инструмента.</p>
+      <div class="tag">AUTOMATION</div><div class="tag">AI / TOOLS</div>
+    </article>
+    <article class="card" style="--glow:#b18cff">
+      <div class="num">03 — NEXT LEVEL</div><h3>И ещё больше</h3>
+      <p>Алгоритмы, архитектура, эксперименты и постоянное развитие. Предел — только начало.</p>
+      <div class="tag">LEARNING</div><div class="tag">BUILDING</div>
+    </article>
+  </div>
+</div></section>
+
+<section class="section" id="terminal"><div class="wrap reveal">
+  <div class="section-head">
+    <div><div class="eyebrow">03 / DEVELOPER CONSOLE</div><h2>Мой мир — терминал.</h2></div>
+    <p>Здесь идеи получают форму. Команда за командой.</p>
+  </div>
+  <div class="terminal">
+    <div class="termbar"><i class="traffic"></i><i class="traffic"></i><i class="traffic"></i><span style="margin-left:8px">protocol@universe: ~</span></div>
+    <div class="termtext" id="typed">
+      <span class="prompt">protocol@universe:~$</span> initialize greatness<br>
+      <span class="purple">[ OK ]</span> Mindset loaded<br>
+      <span class="purple">[ OK ]</span> C++ compiler ready<br>
+      <span class="purple">[ OK ]</span> Python environment ready<br>
+      <span class="purple">[ OK ]</span> Limits set to: NONE<br>
+      <span class="prompt">protocol@universe:~$</span> <span class="cursor"></span>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong>∞</strong><span>POTENTIAL</span></div>
+    <div class="stat"><strong>24/7</strong><span>BUILD MODE</span></div>
+    <div class="stat"><strong>0</strong><span>LIMITS ACCEPTED</span></div>
+  </div>
+</div></section>
+
+<section class="section" id="contact"><div class="wrap reveal">
+  <div class="contact">
+    <div><div class="eyebrow">04 / CONNECT</div><h2>Будущее пишется сейчас.</h2><p>Есть идея? Давай превратим её в реальность.</p></div>
+    <a class="btn primary" href="https:\\telegram.me\bogwino">Связаться ↗</a>
+  </div>
+</div></section>
+</main>
+
+<footer class="wrap footer">
+  <span>© 2026 PROTOCOL — DIGITAL ENTITY</span>
+  <span>DESIGNED IN THE FUTURE · BUILT WITH CODE</span>
+</footer>
+
+<script>
+const canvas=document.getElementById('stars'),ctx=canvas.getContext('2d');
+let w,h,stars=[];
+function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;stars=Array.from({length:Math.min(110,Math.floor(w/10))},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+.3,s:Math.random()*.25+.08}))}
+function draw(){ctx.clearRect(0,0,w,h);if(document.body.classList.contains('normal-mode')){requestAnimationFrame(draw);return}for(const p of stars){p.y-=p.s;if(p.y<0)p.y=h;ctx.fillStyle='rgba(160,220,230,.65)';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill()}requestAnimationFrame(draw)}
+addEventListener('resize',resize);resize();draw();
+
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('show');observer.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+const toggleBtn=document.getElementById('themeToggle');
+const body=document.body;
+function setMode(isNormal){
+  body.classList.toggle('normal-mode',isNormal);
+  toggleBtn.textContent=isNormal?'Вернуть科幻':'Обычный дизайн';
+}
+toggleBtn.addEventListener('click',()=>setMode(!body.classList.contains('normal-mode')));
+</script>
 </body>
 </html>
